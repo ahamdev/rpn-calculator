@@ -238,7 +238,7 @@ while true; do
     	*)  
 
             is_number "$input"
-            local is_number_validation=$?
+            is_number_validation=$?
         
             if [ $is_number_validation -eq 0 ]; then
                 stack+=("$input")
