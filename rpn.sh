@@ -1,12 +1,13 @@
 #!/bin/bash
 
+#-----------------------------------------------------------------
 # Nom du script : rpn.sh
 # Description : Ce script lance une calculatrice RPN interactive
 # Auteur : Aymen HAMDI
 # Date de création : 25/11/2023
 # Version : V1
-#
 # Usage : ./rpn.sh
+#-----------------------------------------------------------------
 
 set -eu
 
@@ -33,39 +34,60 @@ function show_help {
 }
 
 # Fonction qui affiche le contenu de la stack
+# Variables :
+#   stack
+#------------------------------------------------------------------
 function dump {
     echo -e "••• Contenu de la pile :" >&1
     printf "%s\n" "${stack[@]}"
 }
 
 # Fonction qui efface le contenu de la stack
+# Variables :
+#   stack
+#------------------------------------------------------------------
 function drop {
     stack=()
     echo "••• La pile a été vidée" >&1
 }
 
 # Fonction qui intervertit les deux derniers éléments de la stack
+# Variables :
+#   stack
+#   tmp (Variable de stockage temporaire)
+#------------------------------------------------------------------
 function swap {
     
     local tmp=0
 
     if [ ${#stack[@]} -ge 2 ]; then
+        
         tmp=${stack[-1]}
         stack[-1]=${stack[-2]}
         stack[-2]=$tmp
         echo "Éléments intervertis."
+        
     else
+
         echo "××× Erreur : Il faut au moins deux éléments dans la pile pour utiliser swap" >&2
+
     fi
 }
 
 # Fonction qui duplique la stack
+# Variables:
+#   stack
+#------------------------------------------------------------------
 function dup {
     stack+=("${stack[@]}")
     echo "••• La pile a été dupliquée" >&1
 }
 
 # Fonction pour vérifier si la valeur saisie est un nombre
+# Variables :
+#   stack
+#   regex (Pattern regex)
+#------------------------------------------------------------------
 function is_number {
     
     local regex='^[+-]?[0-9]+([.][0-9]+)?$'
@@ -73,13 +95,21 @@ function is_number {
     if [[ $1 =~ $regex ]]; then
         return 0
     else
+
         set +e
         return 1
+        
     fi
 }
 
 # Fonction pour effectuer les opérations
-
+# Variables :
+#   stack
+#   operator
+#   first_operand
+#   second_operand
+#   result
+#------------------------------------------------------------------
 function calculate {
 
     if [ ${#stack[@]} -ge 2 ]; then
@@ -157,6 +187,7 @@ function calculate {
 
 }
 
+#Variable qui gère l'affiche de l'aide lors du premier lancement
 first_run=true
 
 if $first_run; then
