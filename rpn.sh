@@ -93,7 +93,7 @@ function calculate {
             
             "*" | "mul") result=$(bc <<< "$first_operand * $second_operand") ;;
 
-            "**" | "pow") result=$(bc <<< "$first_operand ** $second _operand") ;;
+            "**" | "pow") result=$(bc <<< "$first_operand ^ $second_operand") ;;
             
             "/" | "div")
 
@@ -175,7 +175,7 @@ while true; do
             dup
             ;;
 
-        "+" | "add" | "-" | "sub" | "/" | "div" | "*" | "mul" | "sum")
+        "+" | "add" | "-" | "sub" | "/" | "div" | "*" | "mul" | "**" | "pow" |"sum")
             
             calculate "$input"
             ;;
