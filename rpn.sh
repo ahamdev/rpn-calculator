@@ -92,6 +92,8 @@ function calculate {
             "-" | "sub") result=$(bc <<< "$first_operand - $second_operand") ;;
             
             "*" | "mul") result=$(bc <<< "$first_operand * $second_operand") ;;
+
+            "**" | "pow") result=$(bc <<< "$first_operand ** $second _operand") ;;
             
             "/" | "div")
 
