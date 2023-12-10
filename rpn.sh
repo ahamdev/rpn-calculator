@@ -143,8 +143,8 @@ function calculate {
 
                     result=$(bc -l <<< "$first_operand % $second_operand")
 
-                fi 
-            
+                fi
+
                 ;;
             
             "/" | "div")
@@ -205,7 +205,7 @@ fi
 
 # Boucle principale
 while true; do
-
+    
     read -rp "> " input
 
     case "$input" in
@@ -235,9 +235,12 @@ while true; do
 
 	    "") continue ;;
     
-    	*)
-            is_number $input
-            if [ $? -eq 0 ]; then
+    	*)  
+
+            is_number "$input"
+            local is_number_validation=$?
+        
+            if [ $is_number_validation -eq 0 ]; then
                 stack+=("$input")
             else
                 echo "××× Erreur : Entrée non valide" >&2
