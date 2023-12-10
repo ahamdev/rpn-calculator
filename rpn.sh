@@ -55,7 +55,7 @@ function swap {
         stack[-2]=$tmp
         echo "Éléments intervertis."
     else
-        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour utiliser swap" >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la pile pour utiliser swap" >&2
     fi
 }
 
@@ -93,13 +93,13 @@ function calculate {
         # Gestion des opérations
         case "${operator}" in
             
-            "+" | "add") result=$(bc <<< "$first_operand + $second_operand") ;;
+            "+" | "add") result=$(bc -l <<< "$first_operand + $second_operand") ;;
             
-            "-" | "sub") result=$(bc <<< "$first_operand - $second_operand") ;;
+            "-" | "sub") result=$(bc -l <<< "$first_operand - $second_operand") ;;
             
-            "*" | "mul") result=$(bc <<< "$first_operand * $second_operand") ;;
+            "*" | "mul") result=$(bc -l <<< "$first_operand * $second_operand") ;;
 
-            "**" | "pow") result=$(bc <<< "$first_operand ^ $second_operand") ;;
+            "**" | "pow") result=$(bc -l <<< "$first_operand ^ $second_operand") ;;
 
             "%" | "mod")
 
@@ -111,7 +111,7 @@ function calculate {
 
                 else
 
-                    result=$(bc <<< "$first_operand % $second_operand")
+                    result=$(bc -l <<< "$first_operand % $second_operand")
 
                 fi 
             
@@ -119,7 +119,7 @@ function calculate {
             
             "/" | "div")
 
-                if [ "$second_operand" -eq 0 ]; then
+                if [ "$(echo "$second_operand == 0" | bc -l 2>/dev/null)" -eq 1 ]; then
 
                     echo "××× Erreur: Division par zéro" >&2
 
@@ -137,7 +137,7 @@ function calculate {
             "sum")
 
                 for val in "${stack[@]}"; do
-                    result=$(bc <<< "$result + $val")
+                    result=$(bc -l <<< "$result + $val")
                 done
                 stack=()
                 
@@ -152,7 +152,7 @@ function calculate {
         echo "--> Résultat : $result" >&1
 
     else
-        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour effectuer une opération" >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la pile pour effectuer une opération" >&2
     fi
 
 }
