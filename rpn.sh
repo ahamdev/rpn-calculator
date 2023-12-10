@@ -23,19 +23,21 @@ function show_help {
     echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la stack"
     echo -e " \e[34mdup\e[0m : Dupliquer la stack"
     echo -e " \e[34msum\e[0m : Faire la somme de toute la stack\n"
-    echo -e " \e[31mOpérations arithmétiques\e[0m : +|add, -|sub, /|div, *|mul, sum\n"
+    echo -e " \e[31mOpérations arithmétiques\e[0m : +|add, -|sub, /|div, *|mul, **|pow, %|mod, sum\n"
+    echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n"
+
 }
 
 # Fonction qui affiche le contenu de la stack
 function dump {
-    echo -e "Contenu de la pile :"
+    echo -e "••• Contenu de la pile :" >&1
     printf "%s\n" "${stack[@]}"
 }
 
 # Fonction qui efface le contenu de la stack
 function drop {
     stack=()
-    echo "La pile a été vidée"
+    echo "••• La pile a été vidée" >&1
 }
 
 # Fonction qui intervertit les deux derniers éléments de la stack
@@ -49,14 +51,14 @@ function swap {
         stack[-2]=$tmp
         echo "Éléments intervertis."
     else
-        echo "Erreur : Il faut au moins deux éléments dans la stack pour utiliser swap." >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour utiliser swap." >&2
     fi
 }
 
 # Fonction qui duplique la stack
 function dup {
     stack+=("${stack[@]}")
-    echo "La pile a été dupliquée"
+    echo "••• La pile a été dupliquée" >&1
 }
 
 # Fonction pour vérifier si la valeur saisie est un nombre
@@ -98,7 +100,7 @@ function calculate {
             "/" | "div")
 
                 if [ "$second_operand" -eq 0 ]; then
-                    echo "Erreur: Division par zéro." >&2
+                    echo "××× Erreur: Division par zéro." >&2
                     return
                 else
                     result=$(bc <<< "scale=5; $first_operand / $second_operand")
@@ -114,16 +116,16 @@ function calculate {
                 
             ;;
     
-            *)  echo "Erreur : Opérateur $operator non reconnu" ;;
+            *)  echo "××× Erreur : Opérateur $operator non reconnu" >&2 ;;
 
         esac
 
         # Met à jour la stack avec le résultat
         stack=("${stack[@]:0:${#stack[@]}-2}" "$result")
-        echo "Résultat : $result"
+        echo "••• Résultat : $result" >&1
 
     else
-        echo "Erreur : Il faut au moins deux éléments dans la stack pour effectuer une opération." >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour effectuer une opération." >&2
     fi
 
 }
@@ -163,7 +165,7 @@ while true; do
             ;;
 
         "exit" | "quit")
-            echo "Fermeture..."
+            echo "Fermeture..." >&1
             exit 0
             ;;
 
@@ -189,7 +191,7 @@ while true; do
             if [ $? -eq 0 ]; then
                 stack+=("$input")
             else
-                echo "Erreur : Entrée non valide." >&2
+                echo "××× Erreur : Entrée non valide." >&2
             fi
             ;;
     esac
