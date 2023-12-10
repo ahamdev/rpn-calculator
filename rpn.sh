@@ -23,13 +23,11 @@ function show_help {
     echo -e " \e[34mclear\e[0m : Effacer l'historique des opérations"
     echo -e " \e[34mdump\e[0m : Afficher le contenu de la pile"
     echo -e " \e[34mdrop\e[0m : Effacer le contenu de la pile"
-    echo -e " \e[34mexit, quit\e[0m : Quitter le programme"
     echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la pile"
     echo -e " \e[34mdup\e[0m : Dupliquer la pile"
-    echo -e " \e[34msum\e[0m : Faire la somme de toute la pile\n"
+    echo -e " \e[34mexit, quit\e[0m : Quitter le programme\n"
     echo -e "\e[31mOpérations arithmétiques\e[0m :\n\n + ou add (addition)\n - ou sub (soustraction)\n / ou div (division)"
-    echo -e " * ou mul (multiplication)\n ** ou pow (puissance)\n % ou mod (modulo)\n sum (somme)\n"
-    echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n"
+    echo -e " * ou mul (multiplication)\n ** ou pow (puissance)\n % ou mod (modulo)\n sum (somme de toute la pile)\n"
 
 }
 
@@ -38,7 +36,7 @@ function show_help {
 #   stack
 #------------------------------------------------------------------
 function dump {
-    echo -e "••• Contenu de la pile :" >&1
+    echo -e "\e[33m•••\e[0m Contenu de la pile :" >&1
     printf "%s\n" "${stack[@]}"
 }
 
@@ -48,7 +46,7 @@ function dump {
 #------------------------------------------------------------------
 function drop {
     stack=()
-    echo "••• La pile a été vidée" >&1
+    echo -e "\e[32m•••\e[0m La pile a été vidée" >&1
 }
 
 # Fonction qui intervertit les deux derniers éléments de la stack
@@ -65,11 +63,11 @@ function swap {
         tmp=${stack[-1]}
         stack[-1]=${stack[-2]}
         stack[-2]=$tmp
-        echo "Éléments intervertis."
+        echo -e "\e[32m•••\e[0m Éléments intervertis." >&1
         
     else
 
-        echo "××× Erreur : Il faut au moins deux éléments dans la pile pour utiliser swap" >&2
+        echo -e "\e[31m×××\e[0m Erreur : Il faut au moins deux éléments dans la pile pour utiliser swap" >&2
 
     fi
 }
@@ -80,7 +78,7 @@ function swap {
 #------------------------------------------------------------------
 function dup {
     stack+=("${stack[@]}")
-    echo "••• La pile a été dupliquée" >&1
+    echo -e "\e[32m•••\e[0m La pile a été dupliquée" >&1
 }
 
 # Fonction pour vérifier si la valeur saisie est un nombre
@@ -134,7 +132,7 @@ function calculate {
             "%" | "mod")
 
                 if [ "$(echo "$second_operand == 0" | bc -l 2>/dev/null)" -eq 1 ]; then
-                    echo "××× Erreur: Division par zéro" >&2
+                    echo -e "\e[31m×××\e[0m Erreur: Division par zéro" >&2
                     
                     set +e
                     return 1
@@ -151,7 +149,7 @@ function calculate {
 
                 if [ "$(echo "$second_operand == 0" | bc -l 2>/dev/null)" -eq 1 ]; then
 
-                    echo "××× Erreur: Division par zéro" >&2
+                    echo -e "\e[31m×××\e[0m Erreur: Division par zéro" >&2
 
                     set +e
                     return 1
@@ -173,7 +171,7 @@ function calculate {
                 
                 ;;
     
-            *)  echo "××× Erreur : Opérateur $operator non reconnu" >&2 ;;
+            *)  echo -e "\e[31m×××\e[0m Erreur : Opérateur $operator non reconnu" >&2 ;;
 
         esac
 
@@ -182,7 +180,7 @@ function calculate {
         echo "--> Résultat : $result" >&1
 
     else
-        echo "××× Erreur : Il faut au moins deux éléments dans la pile pour effectuer une opération" >&2
+        echo -e "\e[31m×××\e[0m Erreur : Il faut au moins deux éléments dans la pile pour effectuer une opération" >&2
     fi
 
 }
@@ -192,13 +190,14 @@ first_run=true
 
 if $first_run; then
 
-    echo -e "\n\e[31m╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        \e[0m"
-    echo -e "\e[31m║╔═╗║║╔═╗║║║╚╗║║    ║╔═╗║     ║║         ║║      ╔╝╚╗       \e[0m"
-    echo -e "\e[31m║╚═╝║║╚═╝║║╔╗╚╝║    ║║ ╚╝╔══╗ ║║ ╔══╗╔╗╔╗║║ ╔══╗ ╚╗╔╝╔══╗╔═╗\e[0m"
-    echo "║╔╗╔╝║╔══╝║║╚╗║║    ║║ ╔╗╚ ╗║ ║║ ║╔═╝║║║║║║ ╚ ╗║  ║║ ║╔╗║║╔╝"
-    echo "║║║╚╗║║   ║║ ║║║    ║╚═╝║║╚╝╚╗║╚╗║╚═╗║╚╝║║╚╗║╚╝╚╗ ║╚╗║╚╝║║║ "
-    echo -e "╚╝╚═╝╚╝   ╚╝ ╚═╝    ╚═══╝╚═══╝╚═╝╚══╝╚══╝╚═╝╚═══╝ ╚═╝╚══╝╚╝  \n\n"
+    echo -e "╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        "
+    echo -e "║╔═╗║║╔═╗║║║╚╗║║    ║╔═╗║     ║║         ║║      ╔╝╚╗       "
+    echo -e "║╚═╝║║╚═╝║║╔╗╚╝║    ║║ ╚╝╔══╗ ║║ ╔══╗╔╗╔╗║║ ╔══╗ ╚╗╔╝╔══╗╔═╗"
+    echo -e "\e[31m║╔╗╔╝║╔══╝║║╚╗║║    ║║ ╔╗╚ ╗║ ║║ ║╔═╝║║║║║║ ╚ ╗║  ║║ ║╔╗║║╔╝\e[0m"
+    echo -e "\e[31m║║║╚╗║║   ║║ ║║║    ║╚═╝║║╚╝╚╗║╚╗║╚═╗║╚╝║║╚╗║╚╝╚╗ ║╚╗║╚╝║║║ \e[0m"
+    echo -e "\e[31m╚╝╚═╝╚╝   ╚╝ ╚═╝    ╚═══╝╚═══╝╚═╝╚══╝╚══╝╚═╝╚═══╝ ╚═╝╚══╝╚╝  \e[0m\n\n"
     show_help
+    echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n"
     first_run=false
 fi
 
@@ -243,7 +242,7 @@ while true; do
             if [ $is_number_validation -eq 0 ]; then
                 stack+=("$input")
             else
-                echo "××× Erreur : Entrée non valide" >&2
+                echo -e "\e[31m×××\e[0m Erreur : Entrée non valide" >&2
             fi
             ;;
 
