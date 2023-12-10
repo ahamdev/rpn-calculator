@@ -133,7 +133,7 @@ function calculate {
 
             "%" | "mod")
 
-                if [ "$second_operand" -eq 0 ]; then
+                if [ "$(echo "$second_operand == 0" | bc -l 2>/dev/null)" -eq 1 ]; then
                     echo "××× Erreur: Division par zéro" >&2
                     
                     set +e
