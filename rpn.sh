@@ -17,17 +17,17 @@ stack=()
 # Fonction qui affiche l'aide
 function show_help {
 
-    echo -e "\e[1m          AIDE\e[0m\n"
-    echo -e "Liste des commandes :\n"
-    echo -e " \e[34mhelp\e[0m : Afficher l’aide"
-    echo -e " \e[34mclear\e[0m : Effacer l'historique des opérations"
-    echo -e " \e[34mdump\e[0m : Afficher le contenu de la pile"
-    echo -e " \e[34mdrop\e[0m : Effacer le contenu de la pile"
-    echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la pile"
-    echo -e " \e[34mdup\e[0m : Dupliquer la pile"
-    echo -e " \e[34mexit, quit\e[0m : Quitter le programme\n"
-    echo -e "\e[31mOpérations arithmétiques\e[0m :\n\n + ou add (addition)\n - ou sub (soustraction)\n / ou div (division)"
-    echo -e " * ou mul (multiplication)\n ** ou pow (puissance)\n % ou mod (modulo)\n sum (somme de toute la pile)\n"
+    echo -e "\e[1m          AIDE\e[0m\n" >&1
+    echo -e "Liste des commandes :\n" >&1
+    echo -e " \e[34mhelp\e[0m : Afficher l’aide" >&1
+    echo -e " \e[34mclear\e[0m : Effacer l'historique des opérations" >&1
+    echo -e " \e[34mdump\e[0m : Afficher le contenu de la pile" >&1
+    echo -e " \e[34mdrop\e[0m : Effacer le contenu de la pile" >&1
+    echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la pile" >&1
+    echo -e " \e[34mdup\e[0m : Dupliquer la pile" >&1
+    echo -e " \e[34mexit, quit\e[0m : Quitter le programme\n" >&1
+    echo -e "\e[31mOpérations arithmétiques\e[0m :\n\n + ou add (addition)\n - ou sub (soustraction)\n / ou div (division)" >&1
+    echo -e " * ou mul (multiplication)\n ** ou pow (puissance)\n % ou mod (modulo)\n sum (somme de toute la pile)\n" >&1
 
 }
 
@@ -132,6 +132,7 @@ function calculate {
             "%" | "mod")
 
                 if [ "$(echo "$second_operand == 0" | bc -l 2>/dev/null)" -eq 1 ]; then
+
                     echo -e "\e[31m×××\e[0m Erreur: Division par zéro" >&2
                     
                     set +e
@@ -190,14 +191,14 @@ first_run=true
 
 if $first_run; then
 
-    echo -e "╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        "
-    echo -e "║╔═╗║║╔═╗║║║╚╗║║    ║╔═╗║     ║║         ║║      ╔╝╚╗       "
-    echo -e "║╚═╝║║╚═╝║║╔╗╚╝║    ║║ ╚╝╔══╗ ║║ ╔══╗╔╗╔╗║║ ╔══╗ ╚╗╔╝╔══╗╔═╗"
-    echo -e "\e[31m║╔╗╔╝║╔══╝║║╚╗║║    ║║ ╔╗╚ ╗║ ║║ ║╔═╝║║║║║║ ╚ ╗║  ║║ ║╔╗║║╔╝\e[0m"
-    echo -e "\e[31m║║║╚╗║║   ║║ ║║║    ║╚═╝║║╚╝╚╗║╚╗║╚═╗║╚╝║║╚╗║╚╝╚╗ ║╚╗║╚╝║║║ \e[0m"
-    echo -e "\e[31m╚╝╚═╝╚╝   ╚╝ ╚═╝    ╚═══╝╚═══╝╚═╝╚══╝╚══╝╚═╝╚═══╝ ╚═╝╚══╝╚╝  \e[0m\n\n"
+    echo -e "╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        " >&1
+    echo -e "║╔═╗║║╔═╗║║║╚╗║║    ║╔═╗║     ║║         ║║      ╔╝╚╗       " >&1
+    echo -e "║╚═╝║║╚═╝║║╔╗╚╝║    ║║ ╚╝╔══╗ ║║ ╔══╗╔╗╔╗║║ ╔══╗ ╚╗╔╝╔══╗╔═╗" >&1
+    echo -e "\e[31m║╔╗╔╝║╔══╝║║╚╗║║    ║║ ╔╗╚ ╗║ ║║ ║╔═╝║║║║║║ ╚ ╗║  ║║ ║╔╗║║╔╝\e[0m" >&1
+    echo -e "\e[31m║║║╚╗║║   ║║ ║║║    ║╚═╝║║╚╝╚╗║╚╗║╚═╗║╚╝║║╚╗║╚╝╚╗ ║╚╗║╚╝║║║ \e[0m" >&1
+    echo -e "\e[31m╚╝╚═╝╚╝   ╚╝ ╚═╝    ╚═══╝╚═══╝╚═╝╚══╝╚══╝╚═╝╚═══╝ ╚═╝╚══╝╚╝  \e[0m\n\n" >&1
     show_help
-    echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n"
+    echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n" >&1
     first_run=false
 fi
 
