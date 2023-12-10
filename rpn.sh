@@ -15,15 +15,19 @@ stack=()
 
 # Fonction qui affiche l'aide
 function show_help {
+
+    echo -e "\e[1m          AIDE\e[0m\n"
     echo -e "Liste des commandes :\n"
     echo -e " \e[34mhelp\e[0m : Afficher l’aide"
-    echo -e " \e[34mdump\e[0m : Afficher le contenu de la stack"
-    echo -e " \e[34mdrop\e[0m : Effacer le contenu de la stack"
+    echo -e " \e[34mclear\e[0m : Effacer l'historique des opérations"
+    echo -e " \e[34mdump\e[0m : Afficher le contenu de la pile"
+    echo -e " \e[34mdrop\e[0m : Effacer le contenu de la pile"
     echo -e " \e[34mexit, quit\e[0m : Quitter le programme"
-    echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la stack"
-    echo -e " \e[34mdup\e[0m : Dupliquer la stack"
-    echo -e " \e[34msum\e[0m : Faire la somme de toute la stack\n"
-    echo -e " \e[31mOpérations arithmétiques\e[0m : +|add, -|sub, /|div, *|mul, **|pow, %|mod, sum\n"
+    echo -e " \e[34mswap\e[0m : Intervertir les deux derniers éléments de la pile"
+    echo -e " \e[34mdup\e[0m : Dupliquer la pile"
+    echo -e " \e[34msum\e[0m : Faire la somme de toute la pile\n"
+    echo -e "\e[31mOpérations arithmétiques\e[0m :\n\n + ou add (addition)\n - ou sub (soustraction)\n / ou div (division)"
+    echo -e " * ou mul (multiplication)\n ** ou pow (puissance)\n % ou mod (modulo)\n sum (somme)\n"
     echo -e "Pour commencer, saisissez un à un deux chiffres ou deux nombres, suivis d'un opérateur :\n"
 
 }
@@ -51,7 +55,7 @@ function swap {
         stack[-2]=$tmp
         echo "Éléments intervertis."
     else
-        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour utiliser swap." >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour utiliser swap" >&2
     fi
 }
 
@@ -96,16 +100,39 @@ function calculate {
             "*" | "mul") result=$(bc <<< "$first_operand * $second_operand") ;;
 
             "**" | "pow") result=$(bc <<< "$first_operand ^ $second_operand") ;;
+
+            "%" | "mod")
+
+                if [ "$second_operand" -eq 0 ]; then
+                    echo "××× Erreur: Division par zéro" >&2
+                    
+                    set +e
+                    return 1
+
+                else
+
+                    result=$(bc <<< "$first_operand % $second_operand")
+
+                fi 
+            
+                ;;
             
             "/" | "div")
 
                 if [ "$second_operand" -eq 0 ]; then
-                    echo "××× Erreur: Division par zéro." >&2
-                    return
-                else
-                    result=$(bc <<< "scale=5; $first_operand / $second_operand")
+
+                    echo "××× Erreur: Division par zéro" >&2
+
+                    set +e
+                    return 1
+
+                else 
+
+                    result=$(bc -l <<< "scale=3; $first_operand / $second_operand")
+
                 fi
-            ;;
+
+                ;;
 
             "sum")
 
@@ -114,7 +141,7 @@ function calculate {
                 done
                 stack=()
                 
-            ;;
+                ;;
     
             *)  echo "××× Erreur : Opérateur $operator non reconnu" >&2 ;;
 
@@ -122,10 +149,10 @@ function calculate {
 
         # Met à jour la stack avec le résultat
         stack=("${stack[@]:0:${#stack[@]}-2}" "$result")
-        echo "••• Résultat : $result" >&1
+        echo "--> Résultat : $result" >&1
 
     else
-        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour effectuer une opération." >&2
+        echo "××× Erreur : Il faut au moins deux éléments dans la stack pour effectuer une opération" >&2
     fi
 
 }
@@ -134,7 +161,7 @@ first_run=true
 
 if $first_run; then
 
-    echo -e "\e[31m╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        \e[0m"
+    echo -e "\n\e[31m╔═══╗╔═══╗╔═╗ ╔╗    ╔═══╗     ╔╗         ╔╗       ╔╗        \e[0m"
     echo -e "\e[31m║╔═╗║║╔═╗║║║╚╗║║    ║╔═╗║     ║║         ║║      ╔╝╚╗       \e[0m"
     echo -e "\e[31m║╚═╝║║╚═╝║║╔╗╚╝║    ║║ ╚╝╔══╗ ║║ ╔══╗╔╗╔╗║║ ╔══╗ ╚╗╔╝╔══╗╔═╗\e[0m"
     echo "║╔╗╔╝║╔══╝║║╚╗║║    ║║ ╔╗╚ ╗║ ║║ ║╔═╝║║║║║║ ╚ ╗║  ║║ ║╔╗║║╔╝"
@@ -152,48 +179,40 @@ while true; do
 
     case "$input" in
 
-        "help")
-            show_help
-            ;;
+        "help") show_help ;;
 
-        "dump")
-            dump
-            ;;
+        "dump") dump ;;
 
-        "drop")
-            drop
-            ;;
+        "drop") drop ;;
 
         "exit" | "quit")
+            
             echo "Fermeture..." >&1
             exit 0
             ;;
 
-        "swap")
-            swap
-            ;;
+        "swap") swap ;;
 
-        "dup")
-            dup
-            ;;
+        "dup") dup ;;
+        
+        "clear") clear ;;
 
-        "+" | "add" | "-" | "sub" | "/" | "div" | "*" | "mul" | "**" | "pow" |"sum")
+        "+" | "add" | "-" | "sub" | "/" | "div" | "*" | "mul" | "**" | "pow" | "%" | "mod" | "sum") 
             
             calculate "$input"
             ;;
 
-	    "")
-            continue
-            ;;
+	    "") continue ;;
     
     	*)
             is_number $input
             if [ $? -eq 0 ]; then
                 stack+=("$input")
             else
-                echo "××× Erreur : Entrée non valide." >&2
+                echo "××× Erreur : Entrée non valide" >&2
             fi
             ;;
+
     esac
     
 done
